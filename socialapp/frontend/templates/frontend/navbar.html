@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" 
+      {% if user.is_authenticated %} 
+      href="{% url 'post-list' %}"
+      {% else %}
+      href="{% url 'index' %}"
+      {% endif %}
+      ><i class="fas fa-laugh"></i> VN</a>
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/tonihe">Developer</a>
+          </li>
+      </ul>
+      {% if user.is_authenticated %}
+      <div>Logged in as:  <strong><a style="text-decoration: none; color: black;" href="{% url 'profile' user.pk %}"> {{ request.user }} </a></strong></div>
+      <div class="nav-item inbox-icon-container">
+          <a href="{% url 'inbox' %}" class="inbox-icon"><i style="font-size: 20px; margin: 5px" class="fas fa-envelope-open-text"></i></a>
+      </div>
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" role="button" aria-expanded="true"><img src="{{ request.user.profile.picture.url }}" class="rounded-circle" width="50" height="50"/></a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'profile' user.pk %}">Profile</a></li>
+          <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
+          <li><a class="dropdown-item" href="{% url 'profile-api' %}">Profile List API</a></li>
+          <li><a class="dropdown-item" href="{% url 'profile-detail-api' user.pk %}">Profile Detail API</a></li>
+          <li><a class="dropdown-item" href="{% url 'post-api' %}">Post List API</a></li>
+          <li><a class="dropdown-item" href="{% url 'post-detail-api' 1 %}">Post Detail API</a></li>
+        </ul>
+      </div>
+      <form class="d-flex" method="GET" action="{% url 'profile-search' %}">
+        <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">@</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
+            name="query" value="{{ request.GET.query }}">
+            <button style="border: none; background-color: transparent; box-shadow: none;" type="submit"><i class="fas fa-search"></i></button>
+          </div>
+      </form>
+      {% endif %}
+    </div>
+  </nav>
+
+
+  <style>
+  .dropdown-item:hover
+  {
+    background-color: transparent;   
+  }
+  </style>

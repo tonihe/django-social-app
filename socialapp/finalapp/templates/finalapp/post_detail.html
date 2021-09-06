@@ -1,0 +1,59 @@
+{% extends 'frontend/base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row mt-3">
+            <div class="col-md-5 col-sm-6">
+                <a href="{% url 'post-list' %}" class="btn btn-primary">Back To Feed</a>
+            </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+            <div class="col-md-5 col-sm-12 border-bottom">
+                <p> <img src="{{ post.author.profile.picture.url }}" style="object-fit: cover;" class="rounded-circle justify-content-start" width="50" height="50">
+                    <strong>{{ post.author }}</strong>
+                    {% if post.created_on != post.modified_date %}
+                    {{post.modified_date}}
+                    {% else %}
+                    {{ post.created_on }}
+                    {% endif %}
+                    {% if post.author == user %}
+                    <a href="{% url 'post-edit' post.pk %}"><i class="far fa-edit"></i></a>
+                    <a href="{% url 'post-delete' post.pk %}"><i class="fas fa-trash"></i></a>
+                    {% endif %}
+                </p>
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="post-image" />
+                {% endif %}
+                <p>{{ post.body }}
+                </p>
+            </div>
+    </div>
+    <div class="row justify-content-center mt-3 mb-5">
+            <div class="col-md-5 col-sm-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-block mt-2">Comment</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+    {% for comment in comments %}
+    <div class="row justify-content-center mt-3 mb-5">
+            <div class="col-md-5 col-sm-6 border-bottom">
+            <p> <img src="{{ comment.author.profile.picture.url }}" style="object-fit: cover;" class="rounded-circle justify-content-start" width="50" height="50">
+            <strong>{{comment.author}}</strong> {{comment.created_on}}</p>
+            <p>{{comment.comment }}</p>
+            {% if comment.author == user %}
+            <div class="row justify-content-end"><a href="{% url 'comment-delete' post.pk comment.pk %}"><i class="fas fa-trash"></i></a></div>
+            {% endif %}
+            </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
